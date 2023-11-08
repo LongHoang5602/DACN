@@ -3,12 +3,12 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import mongoose from 'mongoose';
 import { isEmpty } from 'class-validator';
-import aqp from 'api-query-params';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Role, RoleDocument } from './schemas/role.schema';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/users.interface';
 import { ADMIN_ROLE } from 'src/databases/sample';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class RolesService {

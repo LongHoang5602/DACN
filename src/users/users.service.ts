@@ -5,14 +5,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './users.interface';
 import { ResponseMessage, UserDecorate } from 'src/decorator/customize';
-import aqp from 'api-query-params';
 import { isEmpty } from 'class-validator';
 import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
 import { USER_ROLE } from 'src/databases/sample';
-
+import aqp from 'api-query-params';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 
 @Injectable()
 export class UsersService {
@@ -110,10 +109,6 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new BadRequestException(`Not found user`);
 
-    const getUser = await this.userModel.findOne({
-      _id: id
-    }).select("-password")
-    //getUser.password = undefined
 
     return await this.userModel.findOne({
       _id: id
