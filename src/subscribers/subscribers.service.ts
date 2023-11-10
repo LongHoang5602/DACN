@@ -75,22 +75,19 @@ export class SubscribersService {
     })
   }
 
-  async update(id: string, updateSubscriberDto: UpdateSubscriberDto, user: IUser) {
-    const isExistName = await this.subscriberModel.findOne({
-      email: updateSubscriberDto.email
-    })
-    if (isExistName._id.toString() !== id) {
-      if (isExistName !== null) {
-        throw new BadRequestException(`Đã tồn tại ${updateSubscriberDto.email}`)
-      }
-    }
+  async update(updateSubscriberDto: UpdateSubscriberDto, user: IUser) {
+
     return await this.subscriberModel.updateOne({
-      _id: id, ...updateSubscriberDto,
+      email: user.email
+    }, {
+      ...updateSubscriberDto,
       updatedBy: {
         _id: user._id,
         name: user.email
       }
-    });
+    },
+      { upsert: true }
+    );
   }
 
   async remove(id: string, user: IUser) {
@@ -106,5 +103,9 @@ export class SubscribersService {
     return this.subscriberModel.softDelete({
       _id: id
     })
+  }
+  async getSkills(user: IUser) {
+    const { email } = user
+    return await this.subscriberModel.findOne({ email }, { skills: 1 })
   }
 }

@@ -16,9 +16,17 @@ import { DatabasesModule } from './databases/databases.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { VocabularyModule } from './vocabulary/vocabulary.module';
 import { LearnerModule } from './learner/learner.module';
+import { MailModule } from './mail/mail.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
+    ThrottlerModule.forRoot({
+      ttl: 60000,
+      limit: 10,
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -46,7 +54,8 @@ import { LearnerModule } from './learner/learner.module';
     DatabasesModule,
     SubscribersModule,
     VocabularyModule,
-    LearnerModule
+    LearnerModule,
+    MailModule
   ],
   controllers: [AppController],
   providers: [AppService,

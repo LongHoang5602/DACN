@@ -3,7 +3,7 @@ import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
 import { CreateInterceptor, TransformInterceptor } from 'src/core/transform.interceptor';
-import { ResponseMessage, UserDecorate } from 'src/decorator/customize';
+import { ResponseMessage, SkipCheckPermission, UserDecorate } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 
 @Controller('subscribers')
@@ -15,6 +15,13 @@ export class SubscribersController {
   @ResponseMessage("Create Role")
   create(@Body() createSubscriberDto: CreateSubscriberDto, @UserDecorate() user: IUser) {
     return this.subscribersService.create(createSubscriberDto, user);
+  }
+
+  @Post("skills")
+  @SkipCheckPermission()
+  @ResponseMessage("Get subcriber skill")
+  getUserSkill(@UserDecorate() user: IUser) {
+    return this.subscribersService.getSkills(user);
   }
 
   @Get()
@@ -33,11 +40,12 @@ export class SubscribersController {
     return this.subscribersService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch()
+  @SkipCheckPermission()
   @UseInterceptors(TransformInterceptor)
   @ResponseMessage("Update a Role")
-  update(@Param('id') id: string, @Body() updateSubscriberDto: UpdateSubscriberDto, @UserDecorate() user: IUser) {
-    return this.subscribersService.update(id, updateSubscriberDto, user);
+  update(@Body() updateSubscriberDto: UpdateSubscriberDto, @UserDecorate() user: IUser) {
+    return this.subscribersService.update(updateSubscriberDto, user);
   }
 
   @Delete(':id')
