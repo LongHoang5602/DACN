@@ -77,14 +77,15 @@ export class ResumesService {
   }
 
   async findOne(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new BadRequestException(`Not found resume`);
+    }
     return await this.resumeModel.findById(id);
   }
 
   async findCVbyUserId(user: IUser) {
 
-    return await this.resumeModel.findOne({ userId: user._id }).sort("-createdAt")
+    return await this.resumeModel.find({ userId: user._id }).sort("-createdAt")
       .populate([
         {
           path: "companyId",
@@ -100,7 +101,8 @@ export class ResumesService {
   async update(id: string, status: string, user: IUser) {
 
     return await this.resumeModel.updateOne({
-      _id: id,
+      _id: id
+    }, {
       status: status,
       updatedAt: new Date,
       updatedBy: {
@@ -124,7 +126,9 @@ export class ResumesService {
     if (!mongoose.Types.ObjectId.isValid(id))
       return `not found resume`;
     await this.resumeModel.updateOne({
-      _id: id, deletedBy: {
+      _id: id
+    }, {
+      deletedBy: {
         _id: user._id,
         name: user.email
       }

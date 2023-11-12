@@ -79,14 +79,15 @@ export class PermissionsService {
       apiPath: updatePermissionDto.apiPath,
       method: updatePermissionDto.method,
     })
-    if (permission._id.toString() !== id) {
+    if (permission?._id.toString() !== id) {
       if (permission !== null) {
         throw new BadRequestException(`Đã có apiPath:${updatePermissionDto.apiPath} và method:${updatePermissionDto.method} trong database `)
       }
     }
     console.log(updatePermissionDto)
     return await this.permissionModel.updateOne({
-      _id: id,
+      _id: id
+    }, {
       apiPath: updatePermissionDto.apiPath,
       name: updatePermissionDto.name,
       method: updatePermissionDto.method,

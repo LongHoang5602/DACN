@@ -128,7 +128,9 @@ export class UsersService {
 
   async update(updateUserDto: UpdateUserDto, user: IUser) {
     return await this.userModel.updateOne({
-      _id: updateUserDto._id, ...updateUserDto, updatedBy: {
+      _id: updateUserDto._id
+    }, {
+      ...updateUserDto, updatedBy: {
         _id: user._id,
         name: user.email
       }

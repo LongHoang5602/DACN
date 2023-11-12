@@ -88,7 +88,9 @@ export class RolesService {
       }
     }
     return await this.roleModel.updateOne({
-      _id: id, ...updateRoleDto,
+      _id: id
+    }, {
+      ...updateRoleDto,
       updatedBy: {
         _id: user._id,
         name: user.email
