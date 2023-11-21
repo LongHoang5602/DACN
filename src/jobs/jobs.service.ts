@@ -95,4 +95,34 @@ export class JobsService {
     })
     return await this.jobModel.softDelete({ _id: id });
   }
+
+  async analyzeLevel() {
+    const res = await this.jobModel.find()
+    const result = {};
+    for (const obj of res) {
+      const key = obj.level;
+      const count = result[key] || 0;
+      result[key] = count + 1;
+    }
+
+    return result
+  }
+  async analyzeSkill() {
+    const res = await this.jobModel.find()
+    const result = {};
+    for (const obj of res) {
+      for (let i = 0; i < obj.skills.length; i++) {
+        const key = obj.skills[i];
+        const count = result[key] || 0;
+        result[key] = count + 1;
+      }
+    }
+    for (const [key, value] of Object.entries(result)) {
+      if (key === "BACKEND") {
+        console.log(value)
+      }
+    }
+
+    return result
+  }
 }

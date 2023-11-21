@@ -29,6 +29,22 @@ export class JobsController {
     return this.jobsService.findAll(+currentPage, +limit, qs);
   }
 
+  @Get('analyzelevel')
+  @ResponseMessage("Get a analyzeLevel")
+  @UseInterceptors(TransformInterceptor)
+  @Public()
+  analyzeLevel() {
+    return this.jobsService.analyzeLevel();
+  }
+
+  @Get('analyzeskill')
+  @ResponseMessage("Get a analyzeskill")
+  @UseInterceptors(TransformInterceptor)
+  @Public()
+  analyzeSkill() {
+    return this.jobsService.analyzeSkill();
+  }
+
   @Get(':id')
   @ResponseMessage("Get a job")
   @UseInterceptors(TransformInterceptor)
@@ -36,6 +52,8 @@ export class JobsController {
   findOne(@Param('id') id: string) {
     return this.jobsService.findOne(id);
   }
+
+
 
   @Patch(':id')
   @ResponseMessage("Update job")
