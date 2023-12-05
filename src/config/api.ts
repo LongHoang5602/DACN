@@ -114,6 +114,14 @@ export const callFetchJobById = (id: string) => {
     return axios.get<IBackendRes<IJob>>(`/api/v1/jobs/${id}`);
 }
 
+export const callAnalyzeSkill = () => {
+    return axios.get<IBackendRes<string>>(`/api/v1/jobs/analyzeskill`);
+}
+
+export const callAnalyzeLevel = () => {
+    return axios.get<IBackendRes<string>>(`/api/v1/jobs/analyzelevel`);
+}
+
 /**
  * 
 Module Resume
