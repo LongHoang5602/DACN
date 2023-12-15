@@ -16,11 +16,16 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
     plugins: [
-      react(), 
+      react(),
       // visualizer() as PluginOption
     ],
     server: {
-      port: parseInt(env.PORT)
+      watch: {
+        usePolling: true,
+      },
+      host: true, // needed for the Docker Container port mapping to work
+      strictPort: true,
+      port: 3000
     },
     resolve: {
       alias: {

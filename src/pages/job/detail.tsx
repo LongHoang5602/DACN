@@ -73,7 +73,7 @@ const ClientJobDetailPage = (props: any) => {
                                     <EnvironmentOutlined style={{ color: '#58aaab' }} />&nbsp;{getLocationName(jobDetail.location)}
                                 </div>
                                 <div>
-                                    <HistoryOutlined /> {dayjs(jobDetail.updatedAt).fromNow()}
+                                    <HistoryOutlined /> {dayjs(jobDetail.createdAt).locale("en").fromNow()}
                                 </div>
                                 <Divider />
                                 {parse(jobDetail.description)}
