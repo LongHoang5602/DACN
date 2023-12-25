@@ -78,8 +78,8 @@ export class JobsService {
   }
 
   async update(id: string, updateJobDto: UpdateJobDto, user: IUser) {
-    return await this.jobModel.updateOne({
-      _id: id, ...updateJobDto, updatedBy: {
+    return await this.jobModel.findByIdAndUpdate(id, {
+      ...updateJobDto, updatedBy: {
         _id: user._id,
         name: user.email
       }

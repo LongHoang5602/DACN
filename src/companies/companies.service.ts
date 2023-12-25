@@ -66,8 +66,8 @@ export class CompaniesService {
   }
 
   update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
-    return this.companyModel.updateOne({
-      _id: id, ...updateCompanyDto, updatedBy: {
+    return this.companyModel.findByIdAndUpdate(id, {
+      ...updateCompanyDto, updatedBy: {
         _id: user._id,
         email: user.email
       }

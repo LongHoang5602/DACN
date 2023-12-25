@@ -51,9 +51,9 @@ export class UsersService {
   async register(registerUserDto: RegisterUserDto) {
 
     const isValidEmail = this.userModel.findOne({ email: registerUserDto.email })
-    if (isValidEmail !== undefined) {
-      throw new BadRequestException(`Email ${registerUserDto.email} đã tồn tại`)
-    }
+    // if (isValidEmail !== undefined) {
+    //   throw new BadRequestException(`Email ${registerUserDto.email} đã tồn tại`)
+    // }
     const userRole = await this.roleModel.findOne({ name: USER_ROLE })
     const hashPassword = this.getHashPassword(registerUserDto.password);
 
