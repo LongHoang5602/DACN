@@ -28,12 +28,14 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   //config Cors
-  app.enableCors({
-    "origin": true,
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-    "preflightContinue": false,
-    credentials: true
-  });
+  app.enableCors(
+    {
+      "origin": true,
+      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "preflightContinue": false,
+      credentials: true
+    }
+  );
   //config cookies
   app.use(cookieParser());
   app.use(helmet());

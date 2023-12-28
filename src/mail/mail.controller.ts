@@ -7,6 +7,7 @@ import { Subscriber } from 'rxjs';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { SubscriberDocument } from 'src/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from 'src/jobs/schemas/job.schema';
+import { Cron } from '@nestjs/schedule';
 
 @Controller('mail')
 export class MailController {
@@ -21,9 +22,12 @@ export class MailController {
   @Get()
   @Public()
   @ResponseMessage("Test email")
+  @Cron('0 0 * * 1')
+  //At every 00:00 on Monday
   async handleTestEmail() {
-    const subscribers = await this.subscriberModel.find({});
+    const subscribers = await this.subscriberModel.find();
     for (const subs of subscribers) {
+      console.log(subs)
       const subsSkills = subs.skills;
       const jobWithMatchingSkills = await this.jobModel.find({ skills: { $in: subsSkills } });
       if (jobWithMatchingSkills.length > 0) {
@@ -37,12 +41,12 @@ export class MailController {
           }
         })
         await this.mailerService.sendMail({
-          to: "longhoang5602@gmail.com",
+          to: subs.email,
           from: '"Website tìm việc"', // override default from
           subject: 'Các công việc',
           template: "new-job",
           context: {
-            reciver: "Long",
+            reciver: subs.name,
             jobs: jobs
           }
         });

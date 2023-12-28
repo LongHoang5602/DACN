@@ -47,25 +47,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
 
         )
-        const check = permissions.map(item => {
-            if (item.method === targetMethod && item.apiPath === targetEndpoint) {
-                console.log(item.method)
-                console.log(targetMethod)
-                console.log(item.apiPath)
-                console.log(targetEndpoint)
-            }
-
-        })
 
         if (targetEndpoint.startsWith("/api/v1/auth")) {
             isExist = true
         }
-        if (targetEndpoint.startsWith("/api/v1/learner")) {
-            isExist = true
-        }
-        if (targetEndpoint.startsWith("/api/v1/vocabulary")) {
-            isExist = true
-        }
+
         if (!isExist && !isSkipPermission) {
             throw new ForbiddenException("Bạn không có quyền ")
         }

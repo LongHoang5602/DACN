@@ -35,11 +35,11 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Patch()
+  @Patch(':id')
   @ResponseMessage("Update a user")
   @UseInterceptors(TransformInterceptor)
-  update(@Body() updateUserDto: UpdateUserDto, @UserDecorate() user: IUser) {
-    return this.usersService.update(updateUserDto, user);
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @UserDecorate() user: IUser) {
+    return this.usersService.update(id, updateUserDto, user);
   }
 
   @Delete(':id')

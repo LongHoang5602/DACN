@@ -8,12 +8,15 @@ import { IUser } from 'src/users/users.interface';
 import mongoose from 'mongoose';
 import { isEmpty } from 'class-validator';
 import aqp from 'api-query-params';
+import { Job, JobDocument } from 'src/jobs/schemas/job.schema';
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectModel(Company.name)
-    private companyModel: SoftDeleteModel<CompanyDocument>
+    private companyModel: SoftDeleteModel<CompanyDocument>,
+    @InjectModel(Job.name)
+    private jobModel: SoftDeleteModel<JobDocument>
   ) { }
   async create(createCompanyDto: CreateCompanyDto, user: IUser) {
     const company = await this.companyModel.create({
@@ -59,14 +62,14 @@ export class CompaniesService {
     }
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new BadRequestException(`Not found company`);
-    return this.companyModel.findById(id);
+    return await this.companyModel.findById(id);
   }
 
-  update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
-    return this.companyModel.findByIdAndUpdate(id, {
+  async update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
+    return await this.companyModel.findByIdAndUpdate(id, {
       ...updateCompanyDto, updatedBy: {
         _id: user._id,
         email: user.email
@@ -77,12 +80,20 @@ export class CompaniesService {
   async remove(id: string, user: IUser) {
     if (!mongoose.Types.ObjectId.isValid(id))
       return `Not found company`;
-    await this.companyModel.updateOne({
-      _id: id, deletedBy: {
+    await this.companyModel.findByIdAndUpdate(id, {
+      deletedBy: {
         _id: user._id,
         email: user.email
       }
     });
+    const jobInCompany = await this.jobModel.find()
+    jobInCompany.filter((item) => {
+      if (item.company._id.toString() == id) {
+        this.jobModel.softDelete({
+          _id: item._id
+        })
+      }
+    })
     return this.companyModel.softDelete({
       _id: id
     })

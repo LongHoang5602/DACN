@@ -38,7 +38,8 @@ export class JobsService {
     return job
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
+  async findAll(currentPage: number, limit: number, qs: string, skills?: string[], locations?: string[]) {
+
     const { filter, projection, population } = aqp(qs);
     let { sort } = aqp(qs);
     delete filter.current;
@@ -59,6 +60,59 @@ export class JobsService {
       .sort(sort as any)
       .populate(population)
       .exec();
+    const d = await this.jobModel.find()
+
+    if (skills !== undefined) {
+      const resSkills = d.filter((item) => {
+        for (let i = 0; i < item.skills.length; i++) {
+          if (skills.includes(item.skills[i])) {
+            return item
+          }
+        }
+      })
+      if (locations !== undefined) {
+        const resBoth = resSkills.filter((item) => {
+          if (locations.includes(item.location)) {
+            return item
+          }
+        })
+        return {
+          meta: {
+            current: currentPage, //trang hiện tại
+            pageSize: limit, //số lượng bản ghi đã lấy
+            pages: totalPages, //tổng số trang với điều kiện query
+            total: totalItems // tổng số phần tử (số bản ghi)
+          },
+          result: resBoth
+        }
+      }
+      return {
+        meta: {
+          current: currentPage, //trang hiện tại
+          pageSize: limit, //số lượng bản ghi đã lấy
+          pages: totalPages, //tổng số trang với điều kiện query
+          total: totalItems // tổng số phần tử (số bản ghi)
+        },
+        result: resSkills
+      }
+    }
+    if (locations !== undefined) {
+      const resLocation = d.filter((item) => {
+        if (locations.includes(item.location)) {
+          return item
+        }
+      })
+      return {
+        meta: {
+          current: currentPage, //trang hiện tại
+          pageSize: limit, //số lượng bản ghi đã lấy
+          pages: totalPages, //tổng số trang với điều kiện query
+          total: totalItems // tổng số phần tử (số bản ghi)
+        },
+        result: resLocation
+      }
+    }
+
 
     return {
       meta: {
@@ -67,7 +121,7 @@ export class JobsService {
         pages: totalPages, //tổng số trang với điều kiện query
         total: totalItems // tổng số phần tử (số bản ghi)
       },
-      result //kết quả query
+      result: result
     }
   }
 
@@ -87,8 +141,8 @@ export class JobsService {
   }
 
   async remove(id: string, user: IUser) {
-    await this.jobModel.updateOne({
-      _id: id, deletedBy: {
+    await this.jobModel.findByIdAndUpdate(id, {
+      deletedBy: {
         _id: user._id,
         name: user.email
       }
@@ -124,5 +178,39 @@ export class JobsService {
     }
 
     return result
+  }
+
+  async findValue(skills?: string[], location?: string) {
+    const d = await this.jobModel.find()
+
+    if (skills !== undefined) {
+      const resSkills = d.filter((item) => {
+        for (let i = 0; i < item.skills.length; i++) {
+          if (skills.includes(item.skills[i])) {
+            return item
+          }
+        }
+      })
+      if (location) {
+        const resBoth = resSkills.filter((item) => {
+          if (location == item.location) {
+            return item
+          }
+        })
+        return resBoth
+      }
+      return resSkills
+    }
+    if (location) {
+      const resLocation = d.filter((item) => {
+        if (location == item.location) {
+          return item
+        }
+      })
+      return resLocation
+    }
+
+
+    return {}
   }
 }

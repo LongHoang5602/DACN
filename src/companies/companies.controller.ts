@@ -22,7 +22,9 @@ export class CompaniesController {
   @UseInterceptors(TransformInterceptor)
   findAll(@Query('current') currentPage: string,
     @Query('pageSize') limit: string,
-    @Query() qs: string) {
+    @Query() qs: string
+
+  ) {
     return this.companiesService.findAll(+currentPage, +limit, qs);
   }
 
@@ -35,12 +37,15 @@ export class CompaniesController {
   }
 
   @Delete(':id')
+  @ResponseMessage("Delete a company")
   @UseInterceptors(TransformInterceptor)
   remove(@Param('id') id: string, @UserDecorate() user: IUser) {
     return this.companiesService.remove(id, user);
   }
 
   @Patch(':id')
+  @ResponseMessage("Patch a company")
+  @UseInterceptors(TransformInterceptor)
   update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto, @UserDecorate() user: IUser) {
     return this.companiesService.update(id, updateCompanyDto, user);
   }

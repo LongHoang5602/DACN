@@ -25,7 +25,22 @@ export class JobsController {
   @Public()
   findAll(@Query('current') currentPage: string,
     @Query('pageSize') limit: string,
-    @Query() qs: string) {
+    @Query() qs: string,
+    @Query('locations') locations?: string,
+    @Query('skills') skills?: string) {
+    if (skills && skills.length > 0) {
+      const skillsArray: string[] = JSON.parse(skills);
+      if (locations) {
+        const locationArray: string[] = JSON.parse(locations);
+        return this.jobsService.findAll(+currentPage, +limit, qs, skillsArray, locationArray);
+      }
+      return this.jobsService.findAll(+currentPage, +limit, qs, skillsArray);
+
+    }
+    if (locations) {
+      const locationArray: string[] = JSON.parse(locations);
+      return this.jobsService.findAll(+currentPage, +limit, qs, undefined, locationArray);
+    }
     return this.jobsService.findAll(+currentPage, +limit, qs);
   }
 
@@ -43,6 +58,24 @@ export class JobsController {
   @Public()
   analyzeSkill() {
     return this.jobsService.analyzeSkill();
+  }
+
+  @Get("find")
+  @UseInterceptors(TransformInterceptor)
+  @ResponseMessage("Get jobs")
+  @Public()
+  findValue(@Query('skills') skills?: string[], @Query('location') location?: string) {
+    if (skills && skills.length > 0) {
+      if (location) {
+        return this.jobsService.findValue(skills, location);
+      }
+      return this.jobsService.findValue(skills);
+
+    }
+    if (location) {
+      return this.jobsService.findValue(undefined, location);
+    }
+    return this.jobsService.findValue();
   }
 
   @Get(':id')
@@ -73,4 +106,6 @@ export class JobsController {
     @UserDecorate() user: IUser) {
     return this.jobsService.remove(id, user);
   }
+
+
 }

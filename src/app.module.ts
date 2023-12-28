@@ -55,7 +55,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     SubscribersModule,
     VocabularyModule,
     LearnerModule,
-    MailModule
+    MailModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [AppController],
   providers: [AppService,
