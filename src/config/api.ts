@@ -78,8 +78,8 @@ export const callCreateUser = (user: IUser) => {
     return axios.post<IBackendRes<IUser>>('/api/v1/users', { ...user })
 }
 
-export const callUpdateUser = (user: IUser) => {
-    return axios.patch<IBackendRes<IUser>>(`/api/v1/users`, { ...user })
+export const callUpdateUser = (user: IUser, id: string) => {
+    return axios.patch<IBackendRes<IUser>>(`/api/v1/users/${id}`, { ...user })
 }
 
 export const callDeleteUser = (id: string) => {
@@ -90,6 +90,9 @@ export const callFetchUser = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<IUser>>>(`/api/v1/users?${query}`);
 }
 
+export const callFetchUserById = (id: string) => {
+    return axios.get<IBackendRes<IUser>>(`/api/v1/users/${id}`);
+}
 /**
  * 
 Module Job
@@ -120,6 +123,10 @@ export const callAnalyzeSkill = () => {
 
 export const callAnalyzeLevel = () => {
     return axios.get<IBackendRes<string>>(`/api/v1/jobs/analyzelevel`);
+}
+
+export const callFindJobBySkillAndLocation = (skills?: string[], location?: string) => {
+    return axios.get<IBackendRes<string>>(`/api/v1/jobs/find`);
 }
 
 /**

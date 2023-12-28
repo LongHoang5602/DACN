@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { callFetchJob } from '@/config/api';
 import { IJob } from '@/types/backend';
+import { forEach } from 'lodash';
+import { idCompany } from '@/App';
 
 interface IState {
     isFetching: boolean;
@@ -16,7 +18,12 @@ interface IState {
 export const fetchJob = createAsyncThunk(
     'job/fetchJob',
     async ({ query }: { query: string }) => {
-        const response = await callFetchJob(query);
+        let response = await callFetchJob(query);
+        if (idCompany && response.data && response.data.result) {
+            response.data.result = response.data?.result.filter((item) => {
+                return item.company?._id === idCompany;
+            });
+        }
         return response;
     }
 )

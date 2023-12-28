@@ -30,13 +30,25 @@ import ClientJobPage from './pages/job';
 import ClientJobDetailPage from './pages/job/detail';
 import ClientCompanyPage from './pages/company';
 import ClientCompanyDetailPage from './pages/company/detail';
+import { callFetchAccount, callFetchUserById } from './config/api';
+export let idCompany: string
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const checkHR = async () => {
+    const res = await callFetchAccount()
+    if (res.data?.user._id && res.data?.user.role.name === "HR") {
+      let user = await callFetchUserById(res.data.user._id)
+      idCompany = user?.data?.company?._id as string
+    }
+
+  }
+
   useEffect(() => {
+    checkHR()
     if (rootRef && rootRef.current) {
       rootRef.current.scrollIntoView({ behavior: 'smooth' });
     }

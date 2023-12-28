@@ -1,4 +1,4 @@
-import { callFetchCompany } from '@/config/api';
+import { callFetchCompany, callFetchJobById } from '@/config/api';
 import { convertSlug } from '@/config/utils';
 import { ICompany } from '@/types/backend';
 import { Card, Col, Divider, Empty, Pagination, Row, Spin } from 'antd';
@@ -45,6 +45,10 @@ const CompanyCard = (props: IProps) => {
         }
         setIsLoading(false)
     }
+    const getCompanyByID = async (_id: string) => {
+        const res = await callFetchJobById(_id)
+        return res.data?.company?.logo
+    }
 
 
     const handleOnchangePage = (pagination: { current: number, pageSize: number }) => {
@@ -79,27 +83,53 @@ const CompanyCard = (props: IProps) => {
                         </Col>
 
                         {displayCompany?.map(item => {
-                            return (
-                                <Col span={24} md={6} key={item._id}>
-                                    <Card
-                                        onClick={() => handleViewDetailJob(item)}
-                                        style={{ height: 350 }}
-                                        hoverable
-                                        cover={
-                                            <div className={styles["card-customize"]} >
-                                                <img
-                                                    alt="example"
-                                                    src={`${import.meta.env.VITE_BACKEND_URL}/images/company/${item?.logo}`}
-                                                />
-                                            </div>
-                                        }
-                                    >
-                                        <Divider />
-                                        <h3 style={{ textAlign: "center" }}>{item.name}</h3>
-                                    </Card>
-                                </Col>
-                            )
-                        })}
+                            if (item.logo === undefined) {
+                                const logo = getCompanyByID(item._id as string)
+                                return (
+                                    <Col span={24} md={6} key={item._id}>
+                                        <Card
+                                            onClick={() => handleViewDetailJob(item)}
+                                            style={{ height: 350 }}
+                                            hoverable
+                                            cover={
+                                                <div className={styles["card-customize"]} >
+                                                    <img
+                                                        alt="example"
+                                                        src={`${import.meta.env.VITE_BACKEND_URL}/images/company/${logo}`}
+                                                    />
+                                                </div>
+                                            }
+                                        >
+                                            <Divider />
+                                            <h3 style={{ textAlign: "center" }}>{item.name}</h3>
+                                        </Card>
+                                    </Col>
+                                )
+                            } else {
+                                return (
+                                    <Col span={24} md={6} key={item._id}>
+                                        <Card
+                                            onClick={() => handleViewDetailJob(item)}
+                                            style={{ height: 350 }}
+                                            hoverable
+                                            cover={
+                                                <div className={styles["card-customize"]} >
+                                                    <img
+                                                        alt="example"
+                                                        src={`${import.meta.env.VITE_BACKEND_URL}/images/company/${item?.logo}`}
+                                                    />
+                                                </div>
+                                            }
+                                        >
+                                            <Divider />
+                                            <h3 style={{ textAlign: "center" }}>{item.name}</h3>
+                                        </Card>
+                                    </Col>
+                                )
+                            }
+
+                        }
+                        )}
 
                         {(!displayCompany || displayCompany && displayCompany.length === 0)
                             && !isLoading &&

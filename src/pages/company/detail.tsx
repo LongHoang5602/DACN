@@ -29,6 +29,7 @@ const ClientCompanyDetailPage = (props: any) => {
         }
         init();
     }, [id]);
+    console.log(companyDetail)
 
     return (
         <div className={`${styles["container"]} ${styles["detail-job-section"]}`}>
@@ -37,6 +38,7 @@ const ClientCompanyDetailPage = (props: any) => {
                 :
                 <Row gutter={[20, 20]}>
                     {companyDetail && companyDetail._id &&
+
                         <>
                             <Col span={24} md={16}>
                                 <div className={styles["header"]}>

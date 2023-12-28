@@ -2,16 +2,37 @@ import { Button, Col, Form, Row, Select } from 'antd';
 import { EnvironmentOutlined, MonitorOutlined } from '@ant-design/icons';
 import { LOCATION_LIST, SKILLS_LIST } from '@/config/utils';
 import { ProForm } from '@ant-design/pro-components';
+import { callFindJobBySkillAndLocation } from '@/config/api';
+import { Link, useNavigate } from 'react-router-dom';
 
+export let skills: string[]
+export let locations: string[]
+
+export function setSkills(newSkills: string[]): void {
+    skills = newSkills;
+}
+
+
+export function setLocations(newLocation: string[]): void {
+    locations = newLocation;
+}
 const SearchClient = () => {
     const optionsSkills = SKILLS_LIST;
     const optionsLocations = LOCATION_LIST;
     const [form] = Form.useForm();
-
+    const nav = useNavigate()
 
     const onFinish = async (values: any) => {
+        if (values.skills) {
+            skills = values.skills
+        }
+        if (values.location) {
+            locations = values.location
+        }
 
+        nav('job')
     }
+
 
     return (
         <ProForm
@@ -62,7 +83,7 @@ const SearchClient = () => {
                     </ProForm.Item>
                 </Col>
                 <Col span={12} md={4}>
-                    <Button type='primary' onClick={() => form.submit()}>Search</Button>
+                    <Button type='primary' htmlType='submit' >Search</Button>
                 </Col>
             </Row>
         </ProForm>

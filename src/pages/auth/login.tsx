@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Input, message, notification } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { callLogin } from 'config/api';
+import { callFetchAccount, callFetchUserById, callLogin } from 'config/api';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserLoginInfo } from '@/redux/slice/accountSlide';
@@ -21,9 +21,11 @@ const LoginPage = () => {
         //đã login => redirect to '/'
         if (isAuthenticated) {
             // navigate('/');
+
             window.location.href = '/';
         }
     }, [])
+
 
     const onFinish = async (values: any) => {
         const { username, password } = values;

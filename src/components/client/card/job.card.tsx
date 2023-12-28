@@ -5,34 +5,40 @@ import { EnvironmentOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Pagination, Row, Spin } from 'antd';
 import { useState, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { setLocations, setSkills } from '../search.client';
 dayjs.extend(relativeTime)
 
 interface IProps {
     showPagination?: boolean;
+    skills?: string[]
+    locations?: string[]
 }
 
 const JobCard = (props: IProps) => {
-    const { showPagination = false } = props;
+    const { showPagination = false, skills, locations } = props;
+
 
     const [displayJob, setDisplayJob] = useState<IJob[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [current, setCurrent] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(6);
+
     const [total, setTotal] = useState(0);
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("sort=-updatedAt");
     const navigate = useNavigate();
-
     useEffect(() => {
         fetchJob();
-    }, [current, pageSize, filter, sortQuery]);
+
+    }, [current, pageSize, filter, sortQuery, skills, locations]);
 
     const fetchJob = async () => {
+
         setIsLoading(true)
         let query = `current=${current}&pageSize=${pageSize}`;
         if (filter) {
@@ -40,6 +46,14 @@ const JobCard = (props: IProps) => {
         }
         if (sortQuery) {
             query += `&${sortQuery}`;
+        }
+        if (skills && skills.length > 0) {
+            query += `&skills=${JSON.stringify(skills)}`;
+            setSkills([])
+        }
+        if (locations && locations.length > 0) {
+            query += `&locations=${JSON.stringify(locations)}`;
+            setLocations([])
         }
 
         const res = await callFetchJob(query);

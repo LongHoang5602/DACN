@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { callFetchCompany } from '@/config/api';
 import { ICompany } from '@/types/backend';
+import { idCompany } from '@/App';
+
 
 interface IState {
     isFetching: boolean;
@@ -17,6 +19,11 @@ export const fetchCompany = createAsyncThunk(
     'company/fetchCompany',
     async ({ query }: { query: string }) => {
         const response = await callFetchCompany(query);
+        if (idCompany && response.data && response.data.result) {
+            response.data.result = response.data?.result.filter((item) => {
+                return item._id === idCompany;
+            });
+        }
         return response;
     }
 )

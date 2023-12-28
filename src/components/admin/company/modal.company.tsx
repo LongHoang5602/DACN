@@ -52,6 +52,7 @@ const ModalCompany = (props: IProps) => {
 
     const submitCompany = async (valuesForm: ICompanyForm) => {
         const { name, address } = valuesForm;
+        console.log("check", dataLogo)
 
         if (dataLogo.length === 0) {
             message.error('Vui lòng upload ảnh Logo')
@@ -61,6 +62,7 @@ const ModalCompany = (props: IProps) => {
         if (dataInit?._id) {
             //update
             const res = await callUpdateCompany(dataInit._id, name, address, value, dataLogo[0].name);
+            console.log(res)
             if (res.data) {
                 message.success("Cập nhật company thành công");
                 handleReset();

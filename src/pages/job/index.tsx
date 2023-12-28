@@ -1,4 +1,4 @@
-import SearchClient from '@/components/client/search.client';
+import SearchClient, { locations, skills } from '@/components/client/search.client';
 import { Col, Divider, Row } from 'antd';
 import styles from 'styles/client.module.scss';
 import JobCard from '@/components/client/card/job.card';
@@ -15,6 +15,8 @@ const ClientJobPage = (props: any) => {
                 <Col span={24}>
                     <JobCard
                         showPagination={true}
+                        skills={skills}
+                        locations={locations}
                     />
                 </Col>
             </Row>

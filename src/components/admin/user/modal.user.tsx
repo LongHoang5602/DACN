@@ -53,7 +53,6 @@ const ModalUser = (props: IProps) => {
         if (dataInit?._id) {
             //update
             const user = {
-                _id: dataInit._id,
                 name,
                 email,
                 password,
@@ -67,7 +66,7 @@ const ModalUser = (props: IProps) => {
                 }
             }
 
-            const res = await callUpdateUser(user);
+            const res = await callUpdateUser(user, dataInit._id);
             if (res.data) {
                 message.success("Cập nhật user thành công");
                 handleReset();
