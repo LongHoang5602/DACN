@@ -21,7 +21,7 @@ services:
     environment:
       - PORT=8080
       - NODE_ENV=production
-      - MONGO_URL= mongodb+srv://nhoxlong020220:long020240123@cluster0.b7mxqc6.mongodb.net/hoidanit
+      - MONGO_URL= mongodb+srv://nhoxlong020220:long020240123@cluster0.b7mxqc6.mongodb.net/database
       # - DB_HOST=host.docker.internal
     expose:
       - 8080
